@@ -10,6 +10,10 @@ Implementation is in `dashboard/index.html`, `dashboard/style.css`, `dashboard/a
 
 Follow-up: the initial camera and each country change now apply **Fit country** only after that country's map assets are ready, so they cannot retain the constructor fallback view. Cache versions are now `app.js?v=13` and `hotspot-map.js?v=8`.
 
+## November 14 documentation checkpoint
+
+Updated the README and methodology with the shipped static three-country explorer, MapLibre country-fit behavior, coordinate inspection boundaries, detailed-point loading model, and exact current-view CSV scope/limitations. The documentation now explicitly distinguishes exported satellite detections from confirmed incidents, perimeters, dispatch guidance, and burned-area measurements.
+
 Browser smoke checks against `http://127.0.0.1:8766` reloaded the release and verified Bulgaria September 2019. At Sofia (`42.6977`, `23.3219`), detailed loading reported two current-view point records and enabled export; clicking export reported that both records were exported with no browser console errors. The browser automation download observer did not provide a local file path, so the downloaded file's bytes were not independently read. Invalid latitude `91` produced the inline range error. `0, 0` navigated outside Bulgaria, warned about catalog scope, found an empty detailed view, and disabled export. Canada August 2023 (437,553) and South Africa July 2024 (65,413) switched with no console errors and export correctly remained blocked until detail data loaded. A 390×844 viewport showed the controls with no horizontal overflow. Not yet manually checked: a zero-record month, a failed bundle request, an unavailable-month flow after this UI change, and a downloaded CSV opened in a spreadsheet.
 
 ## November 14 colored terrain and local context

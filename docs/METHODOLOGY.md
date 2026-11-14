@@ -31,3 +31,11 @@ Paired sensor agreement measures consistency with the reference. Reference detec
 ## Dashboard comparison design
 
 Compare the selected platform's recorded vegetation detections with the Aqua-equivalent estimate for the same country and month. Expose known outages, missing records and unsupported estimates explicitly. The map shows recorded hotspot coordinates. Use held-out agreement with Aqua to assess the adjustment, with early Terra extrapolation still labeled.
+
+### Map inspection and CSV scope
+
+The map starts at the fitted extent for the selected country. It may navigate to any valid signed decimal coordinate, including a location outside that country, without changing the calendar selection. Such navigation does not broaden the data: point bundles contain only the selected country's catalog, so an outside location can legitimately show no records.
+
+At broad scales, the map displays overview-cell aggregates for orientation only. It loads and displays original FIRMS point records only at detailed zoom, filtering those records to the current map viewport. The current-view CSV export is enabled only for that loaded detailed set. It never exports overview aggregates, cluster totals, cluster anchor coordinates, adjusted counts, or coordinates altered to fit a boundary. Each row retains recorded longitude/latitude, UTC acquisition date, original HHMM where supplied, and confidence where supplied.
+
+The export filter is the dashboard's presumed-vegetation subset (`type=0`) with all available confidence classes. It identifies its scope as `current_map_view`; it is not a full-month, countrywide export. CSV rows remain satellite hotspot detections—not confirmed incidents, exact fire perimeters, dispatch guidance, or burned-area measurements. Empty detailed views, unavailable catalog periods, and failed point loads are described separately so that an absence of rows is not presented as an absence of fire.

@@ -1,6 +1,6 @@
 # FireAtlas
 
-FireAtlas is a proposed web app for comparing historical satellite-detected burning activity across the MODIS and VIIRS eras. A fire manager selects a country and date range, then uses a monthly calendar and map to compare historical activity, inspect raw detections by platform and see where the harmonization is uncertain.
+FireAtlas is a static web explorer for comparing historical satellite-detected burning activity across the MODIS and VIIRS eras. Select Bulgaria, Canada, or South Africa and a date range to inspect a monthly calendar, raw detections by platform, and the uncertainty in the harmonized record.
 
 ## MVP
 
@@ -9,8 +9,11 @@ FireAtlas is a proposed web app for comparing historical satellite-detected burn
 - Raw MODIS and VIIRS detections alongside a calibrated activity index, with platform provenance and held-out validation linked from the calendar.
 - A concise methodology and limitations view. The index represents satellite-detected activity. The plotted values are neither incident counts nor burned area.
 - A guided Bulgaria opening above the explorer. Four short steps inspect the monthly record, reveal the January 2019 Aqua-to-NOAA-20 switch, compare satellites on one scale, then hand off to Bulgaria in September 2019. Replay and skip are always available.
+- An interactive MapLibre map that defaults to the selected country's fitted extent. It uses country/month bundles: numbered aggregates at country scale and original recorded FIRMS points after zooming in.
+- Latitude/longitude inspection with signed-decimal validation. Coordinates outside the selected country are allowed, but the interface states that the catalog is limited to the selected country.
+- Current-map-view CSV export of loaded original point records. It is deliberately not a full-month export and never exports aggregate cells, cluster totals, or cluster anchors.
 
-Start with Bulgaria, validate on other regions, and expand from the manifest as processing and validation allow. The deployment baseline is Python preprocessing and a statically exportable Next.js/TypeScript app loading per-country JSON. See the [execution plan](docs/EXECUTION_PLAN.md) for decisions and fallback paths.
+The implementation is Python preprocessing plus hand-written static HTML, CSS, and ES modules; it has no framework, bundler, or runtime API. See the [execution plan](docs/EXECUTION_PLAN.md) for historical decisions and fallback paths.
 
 ## Project notes
 
@@ -48,7 +51,19 @@ python scripts/build_dashboard.py
 python -m http.server 8766 --bind 127.0.0.1 --directory out
 ```
 
-Open [FireAtlas on localhost](http://127.0.0.1:8766). The static build uses plain HTML, CSS and JavaScript and can be hosted from `out/`. The page opens with a guided Bulgaria story that can be replayed or skipped; its final action opens the explorer at Bulgaria, September 2019 in Raw comparison. The full-width interactive map covers Bulgaria, Canada and South Africa. It follows the selected month's Terra, Aqua or NOAA-20 platform, showing grouped detections at country scale and original FIRMS coordinates at close zoom. Detailed Natural Earth borders provide geographic context; they are generalized reference boundaries. Python prebuilds country/month spatial bundles, so no live FIRMS API calls are needed. The map can run offline with the calendar and validation views.
+Open [FireAtlas on localhost](http://127.0.0.1:8766). The static build can be hosted from `out/`. The page opens with a guided Bulgaria story that can be replayed or skipped; its final action opens the explorer at Bulgaria, September 2019 in Raw comparison. The full-width interactive map covers Bulgaria, Canada, and South Africa. It follows the selected month's Terra, Aqua, or NOAA-20 platform, starts at the selected country's fitted extent, shows grouped detections at country scale, and loads original FIRMS coordinates only at close zoom. Natural Earth borders, roads, rivers, and place labels are generalized reference context; terrain is optional and network-dependent. Python prebuilds country/month spatial bundles, so no live FIRMS API calls are needed.
+
+### Inspect coordinates and export detections
+
+Enter signed decimal latitude (−90 through 90) and longitude (−180 through 180), then choose **Go to coordinates**. The map moves to a local inspection zoom without changing the selected country, month, platform, or date range. A location outside the selected country is valid, but may have no available catalog points.
+
+At detailed zoom, the map reports the number of recorded hotspots in the current viewport. **Export current view CSV** is enabled only after the original point bundles finish loading and the viewport has records. The file uses a name such as `fireatlas-pilot-2019-09-noaa-20-current-map-view.csv` and includes:
+
+- country key and display name; selected month and platform
+- recorded longitude/latitude, UTC acquisition date and original HHMM time, and confidence when present
+- `current_map_view` scope, the presumed-vegetation (`type=0`) filter note, NASA FIRMS source, and product version when available
+
+CSV values use UTF-8 with a BOM, CRLF line endings, and quoted/escaped cells for spreadsheet compatibility. Its rows are satellite hotspot detections, not confirmed incidents, fire perimeters, or burned-area measurements. An unavailable period, failed point load, overview-only map, or empty detailed view is explained rather than exported as an empty claim.
 
 
 
@@ -57,4 +72,4 @@ Open [FireAtlas on localhost](http://127.0.0.1:8766). The static build uses plai
 Open this directory as the workspace and start with [AGENTS.md](AGENTS.md) and the latest checkpoint in [progress](docs/PROGRESS.md). The existing local preview uses port 8766. For frontend-only work, copy the edited files from `dashboard/` into `out/` to reuse the generated data. Use the Python build when the release data needs regeneration.
 
 
-Choose **Raw comparison** in Calendar view to compare peak months and inspect raw and adjusted counts for the selected month. The selected-month panel shows Aqua's recorded count, the selected satellite's recorded count, and the Aqua-equivalent estimate together, with a link to held-out validation. The static export includes the required monthly fields.
+Choose **Raw comparison** in Calendar view to compare peak months and inspect raw and adjusted counts for the selected month. The selected-month panel shows Aqua's recorded count, the selected satellite's recorded count, and the Aqua-equivalent estimate together, with a link to held-out validation.
