@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore historical NASA FIRMS wildfire detections and compare MODIS and VIIRS on a common scale.">
+  <title>FireAtlas · Burning activity</title>
+  <link rel="stylesheet" href="./style.css?v=7">
+  <script type="module" src="./app.js?v=8"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="shell top-inner">
+      <a class="brand" href="./"><span class="flame" aria-hidden="true"></span>FireAtlas</a>
+      <a href="#method">Methodology</a>
+    </div>
+  </header>
+  <main class="shell">
+    <section id="story" class="opening" aria-label="Guided opening" hidden></section>
+    <div class="title">
+      <div><h1 id="explore" tabindex="-1">Burning activity</h1><p>Historical satellite detections from NASA FIRMS</p></div>
+      <form id="filters">
+        <label>Country <select id="country">
+          <option value="pilot">Bulgaria</option>
+          <option value="canada">Canada</option>
+          <option value="south-africa">South Africa</option>
+        </select></label>
+        <label>From <select id="from"></select></label>
+        <label>To <select id="to"></select></label>
+      </form>
+    </div>
+    <p id="status" role="status">Loading monthly detections…</p>
+    <noscript><p>Enable JavaScript to explore the monthly records.</p></noscript>
+    <div id="workspace" hidden>
+      <div class="workspace">
+        <section class="calendar-section" aria-labelledby="calendar-title">
+          <div class="heading">
+            <div><h2 id="calendar-title" tabindex="-1">Activity calendar</h2><p id="calendar-unit">Aqua-equivalent vegetation hotspot detections</p></div>
+            <div class="calendar-actions">
+              <label>Calendar view
+                <select id="count-view">
+                  <option value="harmonized">Harmonized</option>
+                  <option value="raw">Raw comparison</option>
+                </select>
+              </label>
+              <button id="all-years" type="button">Full record</button>
+            </div>
+          </div>
+          <div class="calendar-scroll" id="calendar-scroll">
+            <table id="calendar" aria-label="Monthly activity by year"></table>
+          </div>
+          <div class="legend" aria-label="Calendar scale">
+            <span>Activity</span><span class="scale"><i class="level-0"></i><i class="level-1"></i><i class="level-2"></i><i class="level-3"></i><i class="level-4"></i></span>
+            <span id="scale-end"></span><span class="key"><i class="gap"></i>Unavailable</span>
+          </div>
+          <p class="calendar-context" id="calendar-context" aria-live="polite"></p>
+          <p class="detail-note" id="comparison-guide" hidden>A dark left edge marks a satellite switch. The calendar switches to Aqua in 2003 and NOAA-20 in 2019. A change in detections across those boundaries can reflect a change in instruments. <a href="#validation">See held-out results</a>.</p>
+        </section>
+        <section class="detail" aria-labelledby="month-title">
+          <div id="month-detail" aria-live="polite">
+            <div class="month-summary">
+              <h2 id="month-title"></h2>
+              <div id="month-metrics"></div>
+            </div>
+            <div id="month-satellites"></div>
+          </div>
+        </section>
+          <section class="map-section" aria-labelledby="map-title">
+            <div class="heading"><h2 id="map-title">Detection map</h2><span id="map-satellite">NOAA-20</span></div>
+            <div class="map-controls" id="map-controls" hidden>
+              <button type="button" id="map-in" aria-label="Zoom in">+</button>
+              <button type="button" id="map-out" aria-label="Zoom out">−</button>
+              <button type="button" id="map-fit">Fit country</button>
+            </div>
+            <canvas id="map" role="img" aria-describedby="map-caption"></canvas>
+            <p id="map-caption"></p>
+            <p class="detail-note" id="map-comparison" hidden>The map shows recorded hotspots. The adjustment applies to the monthly total.</p>
+            <p id="map-point" role="status"></p>
+            <p id="map-credit" hidden><a href="https://www.naturalearthdata.com/about/terms-of-use/">Natural Earth 1:10m borders</a> · Borders are generalized; original FIRMS coordinates are preserved.</p>
+          </section>
+      </div>
+      <section id="method" aria-labelledby="method-title">
+        <h2 id="method-title">Methodology and validation</h2>
+        <p>The index combines adjusted Terra (2001–2002), Aqua (2003–2018), and adjusted NOAA-20 (2019–2025). Each adjustment is fitted for the selected country using months when both satellites reported data.</p>
+        <p id="validation-guide" hidden>Compare the two error columns to see how much the adjustment changed agreement with Aqua in months held out from fitting. Smaller differences mean closer agreement with Aqua.</p>
+        <div id="validation"></div>
+        <p>Agreement with Aqua measures cross-satellite consistency. Hotspots are detected pixels. Cloud cover, scan geometry, overpass timing and differences in sensitivity can affect the record. Early Terra estimates use a factor fitted on later years.</p>
+        <p><a href="https://www.earthdata.nasa.gov/data/tools/firms">NASA FIRMS data and attribution</a></p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

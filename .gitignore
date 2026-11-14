@@ -1,0 +1,9 @@
+/.env*
+/outputs/
+__pycache__/
+/.venv/
+/node_modules/
+/.next/
+/out/
+/.taste-skill/
+
