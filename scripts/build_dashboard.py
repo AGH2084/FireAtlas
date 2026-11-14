@@ -110,6 +110,8 @@ def main():
     for path in (PROJECT / "dashboard").iterdir():
         if path.is_file():
             shutil.copyfile(path, release / path.name)
+        elif path.is_dir() and path.name in {"vendor", "map-context"}:
+            shutil.copytree(path, release / path.name, dirs_exist_ok=True)
 
 
 if __name__ == "__main__":

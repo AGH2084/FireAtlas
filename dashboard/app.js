@@ -1,4 +1,4 @@
-import { updateHotspotMap } from "./hotspot-map.js?v=3";
+import { updateHotspotMap } from "./hotspot-map.js?v=8";
 import { initStory } from "./story.js?v=2";
 
 const $ = (id) => document.getElementById(id);

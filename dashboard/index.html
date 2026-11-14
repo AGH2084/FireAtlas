@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Explore historical NASA FIRMS wildfire detections and compare MODIS and VIIRS on a common scale.">
   <title>FireAtlas · Burning activity</title>
-  <link rel="stylesheet" href="./style.css?v=7">
-  <script type="module" src="./app.js?v=8"></script>
+  <link rel="stylesheet" href="./style.css?v=10">
+  <link rel="stylesheet" href="./vendor/maplibre-gl/maplibre-gl.css?v=6.16.0">
+  <script type="module" src="./app.js?v=13"></script>
 </head>
 <body>
   <header class="top">
@@ -68,15 +69,22 @@
           <section class="map-section" aria-labelledby="map-title">
             <div class="heading"><h2 id="map-title">Detection map</h2><span id="map-satellite">NOAA-20</span></div>
             <div class="map-controls" id="map-controls" hidden>
-              <button type="button" id="map-in" aria-label="Zoom in">+</button>
-              <button type="button" id="map-out" aria-label="Zoom out">−</button>
               <button type="button" id="map-fit">Fit country</button>
+              <form id="map-coordinate-form" class="coordinate-form">
+                <label>Latitude <input id="map-latitude" inputmode="decimal" autocomplete="off" placeholder="e.g. 42.7"></label>
+                <label>Longitude <input id="map-longitude" inputmode="decimal" autocomplete="off" placeholder="e.g. 25.5"></label>
+                <button type="submit">Go to coordinates</button>
+              </form>
+              <button type="button" id="map-export" disabled>Export current view CSV</button>
             </div>
-            <canvas id="map" role="img" aria-describedby="map-caption"></canvas>
+            <p id="map-coordinate-status" class="detail-note" role="status">Coordinate target: country view. Data is limited to the selected country's catalog.</p>
+            <p id="map-export-status" class="detail-note" role="status">Zoom in to load detailed points before exporting.</p>
+            <div id="map" role="region" aria-describedby="map-caption" aria-label="Interactive detection map"></div>
             <p id="map-caption"></p>
             <p class="detail-note" id="map-comparison" hidden>The map shows recorded hotspots. The adjustment applies to the monthly total.</p>
             <p id="map-point" role="status"></p>
-            <p id="map-credit" hidden><a href="https://www.naturalearthdata.com/about/terms-of-use/">Natural Earth 1:10m borders</a> · Borders are generalized; original FIRMS coordinates are preserved.</p>
+            <p class="detail-note">CSV rows are satellite hotspot detections, not confirmed incidents or burned-area measurements.</p>
+            <p id="map-credit" hidden><a href="https://www.naturalearthdata.com/about/terms-of-use/">Natural Earth 1:10m borders, roads, rivers and places</a> · <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md">Elevation data credits</a> · Geography is generalized; original FIRMS coordinates are preserved.</p>
           </section>
       </div>
       <section id="method" aria-labelledby="method-title">
