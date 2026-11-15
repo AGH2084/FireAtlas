@@ -1,5 +1,11 @@
 # Progress and handoff
 
+## November 15 map demo and Raw comparison layout
+
+The map coordinate hints now use an original FIRMS coordinate from the highest-count overview cell in the selected country, month, and platform. **Go to example hotspot** fills the fields and zooms to that observation. Months without recorded hotspots have no example. CSV remains scoped to the visible original point records and is disabled when the camera moves, while the point bundles load, and when the view is empty. Raw comparison now places both table captions and column headers on the same horizontal lines at desktop widths and stacks the tables on mobile.
+
+Synced the four frontend assets into the three-country static release. Chrome verified that the Bulgaria September 2019 example enabled export and that the downloaded CSV contained 91 records, including the example coordinate and the UTC acquisition field. Verified selected-month hints for Canada and South Africa, correct disabled export at country fit and at an empty view, invalid latitude feedback, aligned Raw comparison headers, and no horizontal page overflow at 390 px.
+
 ## November 14 coordinate inspection and current-view CSV export
 
 Added accessible latitude/longitude controls and a **Go to coordinates** action to the MapLibre detector map. Both inputs require signed decimal degrees: latitude −90 through 90 and longitude −180 through 180. Valid entries preserve the country, month, platform, and date range, then center at local inspection zoom; a live status names the coordinate target and selected country/month/platform. Locations outside the selected country remain navigable, with an explicit warning that data is limited to that country's existing catalog.

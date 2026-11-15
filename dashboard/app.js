@@ -1,4 +1,4 @@
-import { updateHotspotMap } from "./hotspot-map.js?v=8";
+import { updateHotspotMap } from "./hotspot-map.js?v=9";
 import { initStory } from "./story.js?v=2";
 
 const $ = (id) => document.getElementById(id);
@@ -162,6 +162,7 @@ function renderMonth() {
     ? comparisonMarkup(row)
     : metric(row.index.value, "Aqua-equivalent detections") + '<p class="detail-note">' + note + "</p>") + seasonalNote;
   $("month-satellites").innerHTML = '<table class="sensors" aria-label="Original satellite detections">'
+    + (raw ? "<caption>Original satellite detections</caption>" : "")
     + '<thead><tr><th scope="col">Satellite</th><th scope="col">All</th><th scope="col">Vegetation</th></tr></thead><tbody>'
     + sensorRows + "</tbody></table>";
   renderMap(row);

@@ -57,7 +57,9 @@ Open [FireAtlas on localhost](http://127.0.0.1:8766). The static build can be ho
 
 Enter signed decimal latitude (−90 through 90) and longitude (−180 through 180), then choose **Go to coordinates**. The map moves to a local inspection zoom without changing the selected country, month, platform, or date range. A location outside the selected country is valid, but may have no available catalog points.
 
-At detailed zoom, the map reports the number of recorded hotspots in the current viewport. **Export current view CSV** is enabled only after the original point bundles finish loading and the viewport has records. The file uses a name such as `fireatlas-pilot-2019-09-noaa-20-current-map-view.csv` and includes:
+When the selected month has recorded hotspots, the coordinate hints show an actual FIRMS detection from that country, month, and platform. Choose **Go to example hotspot** to fill both inputs and zoom to that location.
+
+At detailed zoom, the map reports the number of recorded hotspots in the current viewport. **Export current view CSV** is enabled once the camera settles, the original point bundles finish loading, and the viewport has at least one record. The file uses a name such as `fireatlas-pilot-2019-09-noaa-20-current-map-view.csv` and includes:
 
 - country key and display name; selected month and platform
 - recorded longitude/latitude, UTC acquisition date and original HHMM time, and confidence when present

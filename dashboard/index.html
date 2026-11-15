@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Explore historical NASA FIRMS wildfire detections and compare MODIS and VIIRS on a common scale.">
   <title>FireAtlas · Burning activity</title>
-  <link rel="stylesheet" href="./style.css?v=10">
+  <link rel="stylesheet" href="./style.css?v=11">
   <link rel="stylesheet" href="./vendor/maplibre-gl/maplibre-gl.css?v=6.16.0">
-  <script type="module" src="./app.js?v=13"></script>
+  <script type="module" src="./app.js?v=14"></script>
 </head>
 <body>
   <header class="top">
@@ -59,8 +59,8 @@
         </section>
         <section class="detail" aria-labelledby="month-title">
           <div id="month-detail" aria-live="polite">
+            <h2 id="month-title"></h2>
             <div class="month-summary">
-              <h2 id="month-title"></h2>
               <div id="month-metrics"></div>
             </div>
             <div id="month-satellites"></div>
@@ -71,9 +71,10 @@
             <div class="map-controls" id="map-controls" hidden>
               <button type="button" id="map-fit">Fit country</button>
               <form id="map-coordinate-form" class="coordinate-form">
-                <label>Latitude <input id="map-latitude" inputmode="decimal" autocomplete="off" placeholder="e.g. 42.7"></label>
-                <label>Longitude <input id="map-longitude" inputmode="decimal" autocomplete="off" placeholder="e.g. 25.5"></label>
+                <label>Latitude <input id="map-latitude" inputmode="decimal" autocomplete="off"></label>
+                <label>Longitude <input id="map-longitude" inputmode="decimal" autocomplete="off"></label>
                 <button type="submit">Go to coordinates</button>
+                <button type="button" id="map-example" hidden>Go to example hotspot</button>
               </form>
               <button type="button" id="map-export" disabled>Export current view CSV</button>
             </div>

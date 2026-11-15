@@ -71,7 +71,8 @@ table { width: 100%; border-collapse: collapse; }
 .legend .key { margin-left: 8px; }
 .calendar-context { margin-top: 12px; }
 .month-initial { display: none; }
-#month-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--gap); align-items: start; }
+#month-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 8px var(--gap); align-items: start; }
+#month-title { grid-column: 1 / -1; }
 .metric { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
 .metric strong { font-size: 28px; line-height: 1; font-weight: 600; }
 .metric span, .detail-note, #map-caption { color: var(--muted); font-size: 12px; }
@@ -80,8 +81,7 @@ table { width: 100%; border-collapse: collapse; }
 .sensors th:first-child, .validation th:first-child, .validation td:first-child { text-align: left; }
 .sensors th, .validation th { color: var(--muted); font-weight: 500; }
 .sensors tbody th { color: var(--text); }
-.comparison { margin-top: 12px; }
-.comparison caption { text-align: left; font-weight: 600; color: var(--text); padding-bottom: 8px; }
+.sensors caption { text-align: left; font-weight: 600; color: var(--text); padding-bottom: 8px; }
 .comparison td { font-weight: 600; }
 canvas { display: block; width: 100%; height: 150px; background: var(--raised); border-radius: 4px; }
 #map-caption { margin-top: 8px; }

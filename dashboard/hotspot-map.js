@@ -4,6 +4,9 @@ const container = document.getElementById("map");
 const caption = document.getElementById("map-caption");
 const detail = document.getElementById("map-point");
 const coordinateStatus = document.getElementById("map-coordinate-status");
+const latitudeInput = document.getElementById("map-latitude");
+const longitudeInput = document.getElementById("map-longitude");
+const exampleButton = document.getElementById("map-example");
 const exportButton = document.getElementById("map-export");
 const exportStatus = document.getElementById("map-export-status");
 const number = new Intl.NumberFormat("en");
@@ -127,6 +130,14 @@ function resetDetailedRecords(message = "Zoom in to load detailed points before 
   updateExportState("not_loaded", message);
 }
 
+function updateExample(cells = []) {
+  // Overview anchors are original observations from the selected month/platform.
+  const cell = cells.reduce((best, candidate) => !best || candidate[2] > best[2] ? candidate : best, null);
+  latitudeInput.placeholder = cell ? String(cell[4]) : "";
+  longitudeInput.placeholder = cell ? String(cell[3]) : "";
+  exampleButton.hidden = !cell;
+}
+
 function bundleFile(month, x, y) {
   return month + "-" + Math.floor(x / 10) + "-" + Math.floor(y / 10) + ".json";
 }
@@ -151,7 +162,10 @@ function visibleCells(month) {
 function showOverview(cells) {
   map.getSource("points").setData(empty());
   clearMarkers();
-  resetDetailedRecords("Zoom in to load original point records before exporting the current map view.");
+  resetDetailedRecords(selection.count === null
+    ? "Export unavailable: this month’s catalog period is unavailable."
+    : selection.count === 0 ? "No hotspots were recorded this month."
+      : "Zoom in or go to an example hotspot to load records for CSV export.");
   const groups = [];
   for (const [, , total, lon, lat] of cells) {
     const pixel = map.project([lon, lat]);
@@ -212,7 +226,7 @@ async function showPoints(cells, version) {
 
 async function refresh() {
   const version = ++revision;
-  if (!ready || !selection || !overview) return;
+  if (!ready || !selection || !overview || map.isMoving()) return;
   try {
     const cells = visibleCells(selection.month);
     const pixelsPerDegree = map.project([1, 0]).x - map.project([0, 0]).x;
@@ -232,6 +246,7 @@ export async function updateHotspotMap(key, month, platform, count, coverage) {
   const changedMonth = selection?.month !== month;
   country = key;
   selection = { month, platform, count, coverage };
+  if (changedCountry || changedMonth) updateExample();
   container.setAttribute("aria-label", countries[key].name + " " + platform + " hotspot map for " + month);
   caption.textContent = (count === null ? "Monthly hotspot count unavailable" : number.format(count) + " recorded vegetation hotspots") + " · " + coverage;
   resetDetailedRecords(count === null
@@ -263,6 +278,7 @@ export async function updateHotspotMap(key, month, platform, count, coverage) {
     const [months, outline, baseContext] = await getCountrySources(key);
     if (country !== key || selection.month !== month) return;
     overview = months;
+    updateExample(months[month]);
     context = baseContext;
     if (!ready) return;
     if (loadedOutlineKey !== key) {
@@ -290,6 +306,10 @@ map.on("style.load", () => {
     void updateHotspotMap(country, selection.month, selection.platform, selection.count, selection.coverage);
   }
 });
+map.on("movestart", () => {
+  revision++;
+  resetDetailedRecords("Waiting for the map to settle before loading records for export…");
+});
 map.on("moveend", () => { showPlaces(); void refresh(); });
 map.on("click", "cluster-circles", event => {
   const point = event.features?.[0]?.geometry.coordinates;
@@ -314,10 +334,17 @@ map.on("error", event => {
   }
 });
 document.getElementById("map-fit").addEventListener("click", fitCountry);
-document.getElementById("map-coordinate-form").addEventListener("submit", event => {
+const coordinateForm = document.getElementById("map-coordinate-form");
+exampleButton.addEventListener("click", () => {
+  latitudeInput.value = latitudeInput.placeholder;
+  longitudeInput.value = longitudeInput.placeholder;
+  coordinateForm.requestSubmit();
+});
+coordinateForm.addEventListener("submit", event => {
   event.preventDefault();
-  const latitudeText = document.getElementById("map-latitude").value.trim();
-  const longitudeText = document.getElementById("map-longitude").value.trim();
+  if (!country || !selection) return;
+  const latitudeText = latitudeInput.value.trim();
+  const longitudeText = longitudeInput.value.trim();
   const latitude = Number(latitudeText);
   const longitude = Number(longitudeText);
   const decimal = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/;
